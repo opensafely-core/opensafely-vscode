@@ -73,6 +73,14 @@ export function activate(context: vscode.ExtensionContext) {
 				enableScripts: true,
 			}
 		);
+		const logging_panel = vscode.window.createWebviewPanel(
+			'ehrql_html_display',
+			'ehrQL Logging',
+			vscode.ViewColumn.Beside,
+			{
+				enableScripts: true,
+			}
+		);
 
 		// Get the filename relative to the workspace folder
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
@@ -102,6 +110,7 @@ export function activate(context: vscode.ExtensionContext) {
 				panel.webview.html = stderr.trim();
 			} else {
 			panel.webview.html = stdout.trim();
+			logging_panel.webview.html = stderr.trim().replace("\n", "<br/>");
 		}
 		});
 	});
