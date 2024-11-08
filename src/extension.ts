@@ -93,8 +93,10 @@ export function activate(context: vscode.ExtensionContext) {
 		// Get the filename relative to the workspace folder
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
 
+		const imageVersion = vscode.workspace.getConfiguration("ehrql-vscode").get("ImageVersion");
+
 		// Define the command
-		const command = `"${opensafelyPath}" exec ehrql:dev debug "${fileName}" --dummy-tables "${dummyTablesDir}" --display-format html`;
+		const command = `"${opensafelyPath}" exec ehrql:"${imageVersion}" debug "${fileName}" --dummy-tables "${dummyTablesDir}" --display-format html`;
 
 		// Execute the command at the workspace root so we have access to the file and"
 		// the dummy tables folder

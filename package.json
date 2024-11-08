@@ -29,6 +29,11 @@
         "ehrql-vscode.opensafelyPath": {
           "type": "string",
           "description": "path to opensafely executable"
+        },
+        "ehrql-vscode.ImageVersion": {
+          "type": "string",
+          "default": "v1",
+          "description": "ehrQL docker image version"
         }
       }
     }
