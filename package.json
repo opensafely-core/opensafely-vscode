@@ -1,7 +1,7 @@
 {
   "name": "ehrql-vscode",
   "displayName": "ehrQL",
-  "description": "Display ehrQL dataset definitions",
+  "description": "Debug ehrQL dataset definitions",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.95.0"
@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "ehrql-vscode.display",
-        "title": "ehrQL: Display dataset"
+        "command": "ehrql-vscode.debug",
+        "title": "ehrQL: Debug dataset"
       }
     ],
     "configuration": {

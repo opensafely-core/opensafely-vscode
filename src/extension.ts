@@ -13,12 +13,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Create a status bar item that runs the display command
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.command = 'ehrql-vscode.display';
-	statusBarItem.text = "Display dataset";
+    statusBarItem.command = 'ehrql-vscode.debug';
+	statusBarItem.text = "Debug ehrQL";
 	statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
 
 	// Implement the display command defined in the package.json file
-	const disposable = vscode.commands.registerCommand('ehrql-vscode.display', () => {
+	const disposable = vscode.commands.registerCommand('ehrql-vscode.debug', () => {
 	
 		const editor = vscode.window.activeTextEditor;
 
@@ -94,9 +94,9 @@ export function activate(context: vscode.ExtensionContext) {
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
 
 		// Define the command
-		const command = `"${opensafelyPath}" exec ehrql:v1 display "${fileName}" ${dummyTableArg}`;
+		const command = `"${opensafelyPath}" exec ehrql:dev debug "${fileName}" --dummy-tables "${dummyTablesDir}" --display-format html`;
 
-		// Execute the command at the workspace root so we have access to the file and
+		// Execute the command at the workspace root so we have access to the file and"
 		// the dummy tables folder
 		exec(command, { cwd: workspaceFolder.uri.fsPath }, (error, stdout, stderr) => {
 			if (error) {
