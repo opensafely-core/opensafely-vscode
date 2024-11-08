@@ -86,14 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.ViewColumn.Beside,
 			{ 
 				enableScripts: true,
-			}
-		);
-		const logging_panel = vscode.window.createWebviewPanel(
-			'ehrql_html_display',
-			'ehrQL Logging',
-			vscode.ViewColumn.Beside,
-			{
-				enableScripts: true,
+				localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'media'))]
 			}
 		);
 
@@ -111,8 +104,9 @@ export function activate(context: vscode.ExtensionContext) {
 				console.error(error);
 				panel.webview.html = stderr.trim();
 			} else {
-			panel.webview.html = stdout.trim();
-			logging_panel.webview.html = stderr.trim().replace("\n", "<br/>");
+
+			const css_uri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
+			panel.webview.html = getWebviewContent(stderr, stdout, css_uri);
 		}
 		});
 	});
@@ -125,6 +119,25 @@ export function activate(context: vscode.ExtensionContext) {
     // Initialize visibility based on current editor
     updateStatusBarVisibility();
 }
+
+function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri): string {
+	const stderr_output = stderr.trim().replace(/\n/g, "<br>");
+	return `
+			<!DOCTYPE html>
+			<html>
+				<head>
+				  <link rel="stylesheet" type="text/css" href="${css_uri}">
+				</head>
+				<body>
+				  <div>
+					  ${stderr_output}
+					  <b>Dataset</b>
+					  ${stdout.trim()}
+				  </div>
+				</body>
+			 </html>
+	`;
+  }
 
 
 function updateStatusBarVisibility() {
