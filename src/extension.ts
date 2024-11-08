@@ -36,34 +36,49 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		// Find possible virtual environments in this workspace folder, where an
-		// opensafely executable may be found
-        const venvPaths = [
-            path.join(workspaceFolder.uri.fsPath, 'venv'),
-            path.join(workspaceFolder.uri.fsPath, '.venv'),
-            path.join(workspaceFolder.uri.fsPath, 'env')
-        ];
+		// Check that the dummy tables path exists
+		const dummyTablesDir = vscode.workspace.getConfiguration("ehrql-vscode").get("DummyTablesDir", "dummy_tables");
+		const dummyTablesPath = path.join(workspaceFolder.uri.fsPath, dummyTablesDir);
+		if (fs.existsSync(dummyTablesPath)) {
+			statusBarItem.tooltip = `Debug dataset using dummy tables in ${dummyTablesDir}/`;
+		} else {
+			vscode.window.showErrorMessage(`Dummy table path ${dummyTablesDir}/ not found`);
+			return;
+		}
 
-        let opensafelyPath: string | undefined;
-		
-		// Check for virtual environment
-        for (const venvPath of venvPaths) {
-			const windowsOpensafelyPath = path.join(venvPath, 'Scripts', 'opensafely.exe');
-			const unixOpenSafelyPath = path.join(venvPath, 'bin', 'opensafely');
-            
-            if (fs.existsSync(windowsOpensafelyPath)) {
-                opensafelyPath = windowsOpensafelyPath;
-                break;
-            } else if (fs.existsSync(unixOpenSafelyPath)) {
-                opensafelyPath = unixOpenSafelyPath;
-                break;
-            }
-        }
-
+		// Try to get the opensafely executable from extension config
+		let opensafelyPath = vscode.workspace.getConfiguration("ehrql-vscode").get("opensafelyPath");
+		// If nothing is configured, look for it in the workspace venv and fall back
+		// to system install
 		if (!opensafelyPath) {
-            // Fallback to system-installed opensafely
-            opensafelyPath = 'opensafely';
-        }	
+			// Find possible virtual environments in this workspace folder, where an
+			// opensafely executable may be found
+			const venvPaths = [
+				path.join(workspaceFolder.uri.fsPath, 'venv'),
+				path.join(workspaceFolder.uri.fsPath, '.venv'),
+				path.join(workspaceFolder.uri.fsPath, 'env')
+			];
+
+			// Check for virtual environment
+			for (const venvPath of venvPaths) {
+				const windowsOpensafelyPath = path.join(venvPath, 'Scripts', 'opensafely.exe');
+				const unixOpenSafelyPath = path.join(venvPath, 'bin', 'opensafely');
+
+				if (fs.existsSync(windowsOpensafelyPath)) {
+					opensafelyPath = windowsOpensafelyPath;
+					break;
+				} else if (fs.existsSync(unixOpenSafelyPath)) {
+					opensafelyPath = unixOpenSafelyPath;
+					break;
+				}
+			}
+
+			if (!opensafelyPath) {
+				// Fallback to system-installed opensafely
+				opensafelyPath = 'opensafely';
+			}
+		}
+
 
 		const panel = vscode.window.createWebviewPanel(
 			'ehrql_html_display',
@@ -84,19 +99,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Get the filename relative to the workspace folder
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
-		
-		// if a "dummy_tables" folder exists at the configured DummyTablesDir value (which defaults to
-		// "dummy_tables", use the dummy-tables-path argument
-		const dummyTablesDir = vscode.workspace.getConfiguration("ehrql-vscode").get("DummyTablesDir", "dummy_tables");
-		const dummyTablesPath = path.join(workspaceFolder.uri.fsPath, dummyTablesDir);
-		let dummyTableArg: string | undefined;
-		if (fs.existsSync(dummyTablesPath)) {
-			dummyTableArg = `--dummy-tables-path ${dummyTablesDir}` ;
-			statusBarItem.tooltip = `Display dataset using dummy tables in ${dummyTablesDir}/`;
-		} else {
-			dummyTableArg = "";
-			statusBarItem.tooltip = "Display dataset using generated dummy data";
-		}
 
 		// Define the command
 		const command = `"${opensafelyPath}" exec ehrql:v1 display "${fileName}" ${dummyTableArg}`;

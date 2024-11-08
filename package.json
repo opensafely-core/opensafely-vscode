@@ -25,6 +25,10 @@
           "type": "string",
           "default": "dummy_tables",
           "description": "path to dummy tables directory in the workspace folder"
+        },
+        "ehrql-vscode.opensafelyPath": {
+          "type": "string",
+          "description": "path to opensafely executable"
         }
       }
     }
