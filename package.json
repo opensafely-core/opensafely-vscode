@@ -1,7 +1,7 @@
 {
   "name": "ehrql-vscode",
   "displayName": "ehrQL",
-  "description": "Display ehrQL dataset definitions",
+  "description": "Debug ehrQL dataset definitions",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.95.0"
@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "ehrql-vscode.display",
-        "title": "ehrQL: Display dataset"
+        "command": "ehrql-vscode.debug",
+        "title": "ehrQL: Debug dataset"
       }
     ],
     "configuration": {
@@ -25,6 +25,15 @@
           "type": "string",
           "default": "dummy_tables",
           "description": "path to dummy tables directory in the workspace folder"
+        },
+        "ehrql-vscode.opensafelyPath": {
+          "type": "string",
+          "description": "path to opensafely executable"
+        },
+        "ehrql-vscode.ImageVersion": {
+          "type": "string",
+          "default": "v1",
+          "description": "ehrQL docker image version"
         }
       }
     }

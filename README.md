@@ -1,6 +1,6 @@
 # ehrql-vscode
 
-Display the dataset produced from an ehrQL dataset definition.
+Debug and display the dataset produced from an ehrQL dataset definition.
 
 
 ## Features
