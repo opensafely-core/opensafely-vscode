@@ -116,11 +116,11 @@ export function activate(context: vscode.ExtensionContext) {
 			if (error) {
 				console.error(`Error executing Python script: ${command}`);
 				console.error(error);
-				debugPanel.webview.html = stderr.trim();
+				debugPanel!.webview.html = stderr.trim();
 			} else {
 
-			const css_uri = debugPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
-			debugPanel.webview.html = getWebviewContent(stderr, stdout, css_uri);
+			const css_uri = debugPanel!.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
+			debugPanel!.webview.html = getWebviewContent(stderr, stdout, css_uri);
 		}
 		});
 	});
