@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import { exec } from 'child_process';
 
 let statusBarItem: vscode.StatusBarItem;
+let debugPanel: vscode.WebviewPanel | undefined;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -79,16 +80,27 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 
-
-		const panel = vscode.window.createWebviewPanel(
-			'ehrql_html_display',
-			'ehrQL Dataset Output',
-			vscode.ViewColumn.Beside,
-			{ 
-				enableScripts: true,
-				localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'media'))]
+		if (debugPanel) {
+			// If the panel is already visible, just bring it to focus
+			if (debugPanel.visible) {
+				debugPanel.reveal();
+			} else {
+				// If it's not visible, reveal it in half-width column
+				debugPanel.reveal(vscode.ViewColumn.Two);
 			}
-		);
+		} else {
+			debugPanel = vscode.window.createWebviewPanel(
+				'ehrql_html_display',
+				'ehrQL Dataset Output',
+				vscode.ViewColumn.Beside,
+				{ 
+					enableScripts: true,
+					localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'media'))]
+				}
+			);
+			// Handle the panel disposal to clean up
+			debugPanel.onDidDispose(() => { debugPanel = undefined; }, null);
+		}
 
 		// Get the filename relative to the workspace folder
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
@@ -104,11 +116,11 @@ export function activate(context: vscode.ExtensionContext) {
 			if (error) {
 				console.error(`Error executing Python script: ${command}`);
 				console.error(error);
-				panel.webview.html = stderr.trim();
+				debugPanel.webview.html = stderr.trim();
 			} else {
 
-			const css_uri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
-			panel.webview.html = getWebviewContent(stderr, stdout, css_uri);
+			const css_uri = debugPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
+			debugPanel.webview.html = getWebviewContent(stderr, stdout, css_uri);
 		}
 		});
 	});
