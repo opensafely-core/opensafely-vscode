@@ -1,21 +1,50 @@
 # ehrql-vscode
 
-Debug and display the dataset produced from an ehrQL dataset definition.
+NOTE: This extension is currently under development and is subject to change without warning!
+
+
+Debug ehrQL[^1] variables and display the dataset produced from an ehrQL dataset definition,
+using a set of dummy data tables.
+
+Note that this extension can only be run with dummy data, as a local debugging tool.
 
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Debug ehrQL variables and datasets within a dataset definition.
 
-For example if there is an image subfolder under your extension project workspace:
+1. Open a folder that contains a dataset definition file in VS Code (the file does not
+  need to be at the root of the folder). Typically this will be an openSAFELY study repository.
 
-\!\[feature X\]\(images/feature-x.png\)
+2. Open the dataset definition file in the VS Code editor and import ehrQL debug features:
+  ```
+  from ehrql.debug import show, stop
+  ```
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+3. Show the contents of a variable:
+  ```
+  show(<varible>)
+  ```
+
+4. Click on the "Debug ehrQL" menu bar button, or Ctrl+Shift+P and select the "ehrQL: Debug dataset"
+command. Hovering over the menu bar button will display a tooltip showing the location of the
+dummy data tables that will be used by the ehrQL debugger.
+
+![Debug ehrQL menu bar button](media/images/menu_bar_button.png)
+
+The following dataset definition filters patients to only those over 18, and shows the
+`age` variable (with an optional label) on line 6. 
+
+![dataset definition](media/images/dataset_definition.png)
+
+Running the ehrQL debug opens the debug output in an adjacent panel.
+
+![ehrQL debug output](media/images/ehrQL_debug.png)
+
 
 ## Requirements
 
-Requires opensafely:
+Requires the `opensafely` package. This can be set explicitly as an (extension setting)[#extension-settings]. 
 
 ```pip install opensafely```
 
@@ -25,5 +54,15 @@ This extension contributes the following settings:
 
 * `ehrql-vscode.enable`: Enable/disable this extension.
 * `ehrql-vscode.DummyTablesDir`: Set to the name of a directory in the workspace folder that
-  contains dummy tables. Defaults to `dummy_tables`. If no directory is found at the dummy
-  tables location, dummy data is generated from the dataset definition.
+  contains dummy tables. Defaults to `dummy_tables`. See the
+  [opensafely documentation](https://docs.opensafely.org/ehrql/how-to/dummy-data/#supply-your-own-dummy-tables)
+  for information on how opensafely can generate dummy tables for you.
+* `ehrql-vscode.opensafelyPath`: optional; path to an opensafely executable. If not provided,
+  the extension will look for an opensafely install in a virtual environment local to the
+  workspace directory, and will fall back to an `opensafely` installed in an activated or
+  system-wide.
+* `ehrql-vscode.ImageVersion`: ehrQL docker image version; defaults to the current most recent
+  production image (v1).
+
+
+[^1]: <https://docs.opensafely.org/ehrql>
