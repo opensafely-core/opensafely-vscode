@@ -1,10 +1,11 @@
-# ehrql-vscode
+# opensafely-vscode
 
 NOTE: This extension is currently under development and is subject to change without warning!
 
+This is a VSCode extension for working woth the [OpenSAFELY](www.opensafely.org) tools.
 
-Debug ehrQL[^1] variables and display the dataset produced from an ehrQL dataset definition,
-using a set of dummy data tables.
+Currently, it supports debugging ehrQL[^1] variables and display the dataset
+produced from an ehrQL dataset definition, using a set of dummy data tables.
 
 Note that this extension can only be run with dummy data, as a local debugging tool.
 
@@ -52,16 +53,16 @@ Requires the `opensafely` package. This can be set explicitly as an (extension s
 
 This extension contributes the following settings:
 
-* `ehrql-vscode.enable`: Enable/disable this extension.
-* `ehrql-vscode.DummyTablesDir`: Set to the name of a directory in the workspace folder that
+* `opensafely.enable`: Enable/disable this extension.
+* `opensafely.DummyTablesDir`: Set to the name of a directory in the workspace folder that
   contains dummy tables. Defaults to `dummy_tables`. See the
   [opensafely documentation](https://docs.opensafely.org/ehrql/how-to/dummy-data/#supply-your-own-dummy-tables)
   for information on how opensafely can generate dummy tables for you.
-* `ehrql-vscode.opensafelyPath`: optional; path to an opensafely executable. If not provided,
+* `opensafely.opensafelyPath`: optional; path to an opensafely executable. If not provided,
   the extension will look for an opensafely install in a virtual environment local to the
   workspace directory, and will fall back to an `opensafely` installed in an activated or
   system-wide.
-* `ehrql-vscode.ImageVersion`: ehrQL docker image version; defaults to the current most recent
+* `opensafely.EHRQLImageVersion`: ehrQL docker image version; defaults to the current most recent
   production image (v1).
 
 

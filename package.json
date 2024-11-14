@@ -1,7 +1,8 @@
 {
-  "name": "ehrql-vscode",
-  "displayName": "ehrQL",
-  "description": "Debug ehrQL dataset definitions",
+  "name": "opensafely",
+  "displayName": "OpenSAFELY",
+  "repository": "https://github.com/opensafely-core/opensafely-vscode",
+  "description": "Tools for working with OpenSAFELY code",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.95.0"
@@ -14,23 +15,23 @@
   "contributes": {
     "commands": [
       {
-        "command": "ehrql-vscode.debug",
+        "command": "ehrql.debug",
         "title": "ehrQL: Debug dataset"
       }
     ],
     "configuration": {
-      "title": "ehrQL",
+      "title": "OpenSAFELY",
       "properties": {
-        "ehrql-vscode.DummyTablesDir": {
+        "opensafely.DummyTablesDir": {
           "type": "string",
           "default": "dummy_tables",
           "description": "path to dummy tables directory in the workspace folder"
         },
-        "ehrql-vscode.opensafelyPath": {
+        "opensafely.opensafelyPath": {
           "type": "string",
           "description": "path to opensafely executable"
         },
-        "ehrql-vscode.ImageVersion": {
+        "opensafely.EHRQLImageVersion": {
           "type": "string",
           "default": "v1",
           "description": "ehrQL docker image version"
