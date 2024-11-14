@@ -14,12 +14,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Create a status bar item that runs the display command
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.command = 'ehrql-vscode.debug';
+    statusBarItem.command = 'ehrql.debug';
 	statusBarItem.text = "Debug ehrQL";
 	statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
 
+
 	// Implement the display command defined in the package.json file
-	const disposable = vscode.commands.registerCommand('ehrql-vscode.debug', () => {
+	const disposable = vscode.commands.registerCommand('ehrql.debug', () => {
 	
 		const editor = vscode.window.activeTextEditor;
 
@@ -37,8 +38,12 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
+		const config = vscode.workspace.getConfiguration("opensafely");
+		const dummyTablesDir = config.get("DummyTablesDir", "dummy_tables");
+		let opensafelyPath = config.get("opensafelyPath");
+		const imageVersion = config.get("EHRQLImageVersion");
+
 		// Check that the dummy tables path exists
-		const dummyTablesDir = vscode.workspace.getConfiguration("ehrql-vscode").get("DummyTablesDir", "dummy_tables");
 		const dummyTablesPath = path.join(workspaceFolder.uri.fsPath, dummyTablesDir);
 		if (fs.existsSync(dummyTablesPath)) {
 			statusBarItem.tooltip = `Debug dataset using dummy tables in ${dummyTablesDir}/`;
@@ -47,9 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		// Try to get the opensafely executable from extension config
-		let opensafelyPath = vscode.workspace.getConfiguration("ehrql-vscode").get("opensafelyPath");
-		// If nothing is configured, look for it in the workspace venv and fall back
+		// If no path is configured, look for it in the workspace venv and fall back
 		// to system install
 		if (!opensafelyPath) {
 			// Find possible virtual environments in this workspace folder, where an
@@ -105,7 +108,6 @@ export function activate(context: vscode.ExtensionContext) {
 		// Get the filename relative to the workspace folder
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
 
-		const imageVersion = vscode.workspace.getConfiguration("ehrql-vscode").get("ImageVersion");
 
 		// Define the command
 		const command = `"${opensafelyPath}" exec ehrql:"${imageVersion}" debug "${fileName}" --dummy-tables "${dummyTablesDir}" --display-format html`;
