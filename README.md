@@ -2,9 +2,9 @@
 
 NOTE: This extension is currently under development and is subject to change without warning!
 
-This is a VSCode extension for working woth the [OpenSAFELY](www.opensafely.org) tools.
+This is a VSCode extension for working with the [OpenSAFELY](www.opensafely.org) tools.
 
-Currently, it supports debugging ehrQL[^1] variables and display the dataset
+Currently, it supports debugging ehrQL[^1] variables and displaying the dataset
 produced from an ehrQL dataset definition, using a set of dummy data tables.
 
 Note that this extension can only be run with dummy data, as a local debugging tool.
