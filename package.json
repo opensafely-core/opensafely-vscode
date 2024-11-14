@@ -4,14 +4,21 @@
   "repository": "https://github.com/opensafely-core/opensafely-vscode",
   "description": "Tools for working with OpenSAFELY code",
   "publisher": "bennettoxford",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.95.0"
   },
   "categories": [
-    "Programming Languages", "Snippets", "Linters", "Debuggers", "Data Science"
+    "Programming Languages",
+    "Snippets",
+    "Linters",
+    "Debuggers",
+    "Data Science"
   ],
-  "keywords": ["opensafely", "ehrql"],
+  "keywords": [
+    "opensafely",
+    "ehrql"
+  ],
   "pricing": "Free",
   "activationEvents": [
     "onLanguage:python"
