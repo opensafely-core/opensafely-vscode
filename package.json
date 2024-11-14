@@ -16,7 +16,7 @@
     "commands": [
       {
         "command": "ehrql.debug",
-        "title": "ehrQL: Debug dataset"
+        "title": "OpenSAFELY: Debug ehrQL dataset"
       }
     ],
     "configuration": {
