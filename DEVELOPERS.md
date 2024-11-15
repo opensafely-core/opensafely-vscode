@@ -12,7 +12,7 @@
     - It is unclear if this is a hard requirement. It may be you need to be in
       an organization to generate a PAT. But it is what the docs say to do,
       so...
- - add you as to the `bennettoxford` publisher:
+ - add you to the `bennettoxford` publisher:
     - [https://marketplace.visualstudio.com/manage/publishers/bennettoxford]
     - Add user to Publisher using  provided user id
 
