@@ -4,8 +4,8 @@ NOTE: This extension is currently under development and is subject to change wit
 
 This is a VSCode extension for working with the [OpenSAFELY](www.opensafely.org) tools.
 
-Currently, it supports debugging [ehrQL](https://docs.opensafely.org/ehrql) variables and displaying the dataset
-produced from an ehrQL dataset definition, using a set of dummy data tables.
+Currently, it supports debugging [ehrQL](https://docs.opensafely.org/ehrql) variable, tables and
+datasets produced from ehrQL dataset definition files, using a set of dummy data tables.
 
 Note that this extension can only be run with dummy data, as a local debugging tool.
 
@@ -19,12 +19,12 @@ Debug ehrQL variables and datasets within a dataset definition.
 
 2. Open the dataset definition file in the VS Code editor and import ehrQL debug features:
   ```
-  from ehrql.debug import show, stop
+  from ehrql import debug
   ```
 
 3. Show the contents of a variable:
   ```
-  show(<varible>)
+  debug(<varible>)
   ```
 
 4. Click on the "Debug ehrQL" menu bar button, or Ctrl+Shift+P and select the "ehrQL: Debug dataset"
@@ -34,7 +34,7 @@ dummy data tables that will be used by the ehrQL debugger.
 ![Debug ehrQL menu bar button](media/images/menu_bar_button.png)
 
 The following dataset definition filters patients to only those over 18, and shows the
-`age` variable (with an optional label) on line 6. 
+`age` variable (with an optional label), and the final dataset output. 
 
 ![dataset definition](media/images/dataset_definition.png)
 
