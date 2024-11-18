@@ -7,7 +7,3 @@ table {
 table, th, td {
     border: 1px solid;
 }
-
-div.dataset {
-    display: block;
-}
