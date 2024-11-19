@@ -149,7 +149,6 @@ function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri):
 					  ${stderr_output}
 				  </div>
 				  <div class="dataset">
-					<b>Dataset</b>
 					${stdout.trim()}
 				  </div>
 				</body>
