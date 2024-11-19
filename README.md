@@ -45,7 +45,7 @@ Running the ehrQL debug opens the debug output in an adjacent panel.
 
 ## Requirements
 
-Requires the `opensafely` package. This can be set explicitly as an (extension setting)[#extension-settings]. 
+Requires the `opensafely` package. This can be set explicitly as an [extension setting](#extension-settings). 
 
 ```pip install opensafely```
 
