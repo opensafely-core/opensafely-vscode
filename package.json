@@ -28,9 +28,20 @@
     "commands": [
       {
         "command": "ehrql.debug",
-        "title": "OpenSAFELY: Debug ehrQL dataset"
+        "title": "OpenSAFELY: Debug ehrQL dataset",
+        "icon": "$(play)",
+        "enablement": "editorTextFocus && resourceLangId == python"
       }
     ],
+    "menus": {
+        "editor/title/run": [
+            {
+                "command": "ehrql.debug",
+                "group": "navigation",
+                "when": "editorTextFocus && resourceLangId == python"
+            }
+        ]
+    },
     "configuration": {
       "title": "OpenSAFELY",
       "properties": {

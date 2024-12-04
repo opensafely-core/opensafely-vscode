@@ -5,19 +5,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { exec } from 'child_process';
 
-let statusBarItem: vscode.StatusBarItem;
 let debugPanel: vscode.WebviewPanel | undefined;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-	// Create a status bar item that runs the display command
-    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.command = 'ehrql.debug';
-	statusBarItem.text = "Debug ehrQL";
-	statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
-
 
 	// Implement the display command defined in the package.json file
 	const disposable = vscode.commands.registerCommand('ehrql.debug', () => {
@@ -45,9 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Check that the dummy tables path exists
 		const dummyTablesPath = path.join(workspaceFolder.uri.fsPath, dummyTablesDir);
-		if (fs.existsSync(dummyTablesPath)) {
-			statusBarItem.tooltip = `Debug dataset using dummy tables in ${dummyTablesDir}/`;
-		} else {
+		if (!fs.existsSync(dummyTablesPath)) {
 			vscode.window.showErrorMessage(`Dummy table path ${dummyTablesDir}/ not found`);
 			return;
 		}
@@ -127,13 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	});
 
-	// Watch for active editor changes to update status bar visibility
-	context.subscriptions.push(disposable, statusBarItem);
-	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(updateStatusBarVisibility));
-	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(updateStatusBarVisibility));
-
-    // Initialize visibility based on current editor
-    updateStatusBarVisibility();
+	context.subscriptions.push(disposable);
 }
 
 function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri): string {
@@ -156,19 +140,3 @@ function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri):
 	`;
   }
 
-
-function updateStatusBarVisibility() {
-	const editor = vscode.window.activeTextEditor;
-    if (editor && editor.document.languageId === 'python') {
-        statusBarItem.show();
-    } else {
-        statusBarItem.hide();
-    }
-}
-
-
-export function deactivate() {
-	if (statusBarItem) {
-		statusBarItem.dispose();
-	}
-}
