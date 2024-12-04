@@ -30,7 +30,7 @@
         "command": "ehrql.debug",
         "title": "OpenSAFELY: Debug ehrQL dataset",
         "icon": "$(play)",
-        "enablement": "editorTextFocus && resourceLangId == python"
+        "enablement": "editorTextFocus && resourceLangId == python && isEhrqlFile"
       }
     ],
     "menus": {
@@ -38,7 +38,7 @@
             {
                 "command": "ehrql.debug",
                 "group": "navigation",
-                "when": "editorTextFocus && resourceLangId == python"
+                "when": "editorTextFocus && resourceLangId == python && isEhrqlFile"
             }
         ]
     },

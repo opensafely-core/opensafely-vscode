@@ -10,16 +10,16 @@ let debugPanel: vscode.WebviewPanel | undefined;
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+	// Update context based on current editor
+    updateEhrqlContext();
 
-	// Implement the display command defined in the package.json file
+	// Implement the debug command defined in the package.json file
 	const disposable = vscode.commands.registerCommand('ehrql.debug', () => {
 	
 		const editor = vscode.window.activeTextEditor;
 
-		// ensure it's a python file; this could probably do more to check that it's
-		// a file with a dataset definition in it 
-		if (!editor || editor.document.languageId !== 'python') {
-			vscode.window.showErrorMessage('Please open or select a python dataset definition file to run');
+		if (!editor) {
+			vscode.window.showErrorMessage('Please open or select an ehrQL dataset definition file to run');
 			return;
 		}
 
@@ -118,6 +118,9 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(updateEhrqlContext));
+	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(updateEhrqlContext));
+
 }
 
 function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri): string {
@@ -140,3 +143,18 @@ function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri):
 	`;
   }
 
+
+function updateEhrqlContext() {
+	const editor = vscode.window.activeTextEditor;
+	// Do a very cursory check to ensure that this is an ehrQL file, and set a context variable
+	// which is used in the package.json configuration to show the debug ehrql command options
+	// We just check that it's a python file with the word "ehrql" in it; this obviously doesn't
+	// limit the command to ONLY ehrQL dataset definitions, but it should ensure that it's always
+	// enabled for dataset definition files, and it's removed for any python file that definitely
+	// ISN'T a dataset definition
+	if (editor && editor.document.languageId === 'python') {
+		const documentText = editor.document.getText();
+		const is_ehrql = documentText.search("ehrql") > 0;
+		vscode.commands.executeCommand('setContext', 'isEhrqlFile', is_ehrql);
+	}
+}
