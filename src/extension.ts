@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Implement the debug command defined in the package.json file
 	const disposable = vscode.commands.registerCommand('ehrql.debug', () => {
-	
+
 		const editor = vscode.window.activeTextEditor;
 
 		if (!editor) {
@@ -98,7 +98,6 @@ export function activate(context: vscode.ExtensionContext) {
 		// Get the filename relative to the workspace folder
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
 
-
 		// Define the command
 		const command = `"${opensafelyPath}" exec ehrql:"${imageVersion}" debug "${fileName}" --dummy-tables "${dummyTablesDir}" --display-format html`;
 
@@ -119,7 +118,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(updateEhrqlContext));
-	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(updateEhrqlContext));
 
 }
 
