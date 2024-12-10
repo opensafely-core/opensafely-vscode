@@ -4,7 +4,7 @@ NOTE: This extension is currently under development and is subject to change wit
 
 This is a VSCode extension for working with the [OpenSAFELY](www.opensafely.org) tools.
 
-Currently, it supports debugging [ehrQL](https://docs.opensafely.org/ehrql) variable, tables and
+Currently, it supports showing [ehrQL](https://docs.opensafely.org/ehrql) variables, tables and
 datasets produced from ehrQL dataset definition files, using a set of dummy data tables.
 
 Note that this extension can only be run with dummy data, as a local debugging tool.
@@ -12,29 +12,27 @@ Note that this extension can only be run with dummy data, as a local debugging t
 
 ## Features
 
-Debug ehrQL variables and datasets within a dataset definition.
+Show ehrQL variables and datasets within a dataset definition.
 
 1. Open a folder that contains a dataset definition file in VS Code (the file does not
   need to be at the root of the folder). Typically this will be an openSAFELY study repository.
 
-2. Open the dataset definition file in the VS Code editor and import ehrQL debug features:
+2. Open the dataset definition file in the VS Code editor and import ehrQL `show` features:
   ```
-  from ehrql import debug
+  from ehrql import show
   ```
 
 3. Show the contents of a variable:
   ```
-  debug(<varible>)
+  show(<variable>)
   ```
 
-4. Click on the "Debug ehrQL" menu bar button, or Ctrl+Shift+P and select the "ehrQL: Debug dataset"
-command. Hovering over the menu bar button will display a tooltip showing the location of the
-dummy data tables that will be used by the ehrQL debugger.
-
-![Debug ehrQL menu bar button](media/images/menu_bar_button.png)
+4. Click on the Play button, or Ctrl+Shift+P and select the "OpenSAFELY: Debug ehrQL dataset"
+command. 
+![Debug ehrQL play button](media/images/play_button.png)
 
 The following dataset definition filters patients to only those over 18, and shows the
-`age` variable (with an optional label), and the final dataset output. 
+`age` variable and the corresponding date of birth value from the `patients` table (with an optional label), and the final dataset output. 
 
 ![dataset definition](media/images/dataset_definition.png)
 
