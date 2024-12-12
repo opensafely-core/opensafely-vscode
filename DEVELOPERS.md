@@ -1,3 +1,19 @@
+## Developing locally
+
+The main extension code is in `src/extension.ts`. 
+`package.json` contains the extension commands and configuration.
+
+To develop locally, use the vscode debugging feaure.
+
+Open `src/extension.ts` in the vscode editor and press F5 (or Run > Start debugging) to open a 
+debugging window with the extension installed. Open a test study repo in this window to test
+the extension functionality.
+
+Note that you'll need some dummy tables at `dummy_tables` in you test study repo, and the
+opensafely cli installed somewhere that the extension can find it (either globally, in a
+virtual env in the study repo called `venv` or `.venv`, or specified in `.vscode/settings.json`).
+
+
 ## Publishing
 
 
