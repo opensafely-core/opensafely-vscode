@@ -94,6 +94,8 @@ export function activate(context: vscode.ExtensionContext) {
 			// Handle the panel disposal to clean up
 			debugPanel.onDidDispose(() => { debugPanel = undefined; }, null);
 		}
+		
+		debugPanel!.webview.html = 'Loading...';
 
 		// Get the filename relative to the workspace folder
         const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
