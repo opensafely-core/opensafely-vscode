@@ -113,6 +113,9 @@ export function activate(context: vscode.ExtensionContext) {
 			} else {
 
 			const css_uri = debugPanel!.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
+			if (!stderr) {
+				stderr = "Nothing to show.";
+			}
 			debugPanel!.webview.html = getWebviewContent(stderr, stdout, css_uri);
 		}
 		});
