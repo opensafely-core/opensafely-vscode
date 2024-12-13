@@ -3,6 +3,13 @@
 The main extension code is in `src/extension.ts`. 
 `package.json` contains the extension commands and configuration.
 
+### Set up local dev enironment
+```
+just install
+```
+
+### Using the debugger
+
 To develop locally, use the vscode debugging feaure.
 
 Open `src/extension.ts` in the vscode editor and press F5 (or Run > Start debugging) to open a 
