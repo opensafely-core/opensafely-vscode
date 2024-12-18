@@ -62,6 +62,7 @@
       }
     }
   },
+  "icon": "media/images/Logomark_OpenSAFELY.png",
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
