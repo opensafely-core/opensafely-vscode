@@ -14,31 +14,7 @@ Note that this extension can only be run with dummy data, as a local debugging t
 
 Show ehrQL variables and datasets within a dataset definition.
 
-1. Open a folder that contains a dataset definition file in VS Code (the file does not
-  need to be at the root of the folder). Typically this will be an openSAFELY study repository.
-
-2. Open the dataset definition file in the VS Code editor and import ehrQL `show` features:
-  ```
-  from ehrql import show
-  ```
-
-3. Show the contents of a variable:
-  ```
-  show(<variable>)
-  ```
-
-4. Click on the Play button, or Ctrl+Shift+P and select the "OpenSAFELY: Debug ehrQL dataset"
-command. 
-![Debug ehrQL play button](media/images/play_button.png)
-
-The following dataset definition filters patients to only those over 18, and shows the
-`age` variable and the corresponding date of birth value from the `patients` table (with an optional label), and the final dataset output. 
-
-![dataset definition](media/images/dataset_definition.png)
-
-Running the ehrQL debug opens the debug output in an adjacent panel.
-
-![ehrQL debug output](media/images/ehrQL_debug.png)
+Please see the [OpenSAFELY documentation](https://docs.opensafely.org/ehrql/explanation/vscode-extension/) for further information on using the extension with OpenSAFELY.
 
 
 ## Requirements
