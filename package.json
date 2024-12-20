@@ -4,7 +4,7 @@
   "repository": "https://github.com/opensafely-core/opensafely-vscode",
   "description": "Tools for working with OpenSAFELY code",
   "publisher": "bennettoxford",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "engines": {
     "vscode": "^1.95.0"
   },
