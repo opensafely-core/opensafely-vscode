@@ -139,7 +139,14 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function getWebviewContent(output: string[], css_uri: vscode.Uri): string {
-	const text = output.map(it => it.replace("\n", "<br>")).join("<br>");
+	const START_MARKER = "<!-- start debug output -->"
+	const END_MARKER = "<!-- end debug output -->"
+
+	const text = output.map(chunk => {
+		const clean = chunk.replace(START_MARKER, "</pre>").replace(END_MARKER, "<pre>")
+		return `<pre>${clean}</pre>`
+	})
+	console.error(text.join("n"))
 	return `
 			<!DOCTYPE html>
 			<html>
@@ -148,7 +155,7 @@ function getWebviewContent(output: string[], css_uri: vscode.Uri): string {
 				</head>
 				<body>
 				  <div>
-					${text}
+					${text.join("\n")}
 				  </div>
 				</body>
 			 </html>
