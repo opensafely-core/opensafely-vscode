@@ -3,7 +3,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
+import { Writable } from 'stream';
 
 let debugPanel: vscode.WebviewPanel | undefined;
 
@@ -11,7 +12,7 @@ let debugPanel: vscode.WebviewPanel | undefined;
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	// Update context based on current editor
-    updateEhrqlContext();
+	updateEhrqlContext();
 
 	// Implement the debug command defined in the package.json file
 	const disposable = vscode.commands.registerCommand('ehrql.debug', () => {
@@ -32,7 +33,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const config = vscode.workspace.getConfiguration("opensafely");
 		const dummyTablesDir = config.get("DummyTablesDir", "dummy_tables");
-		let opensafelyPath = config.get("opensafelyPath");
+		let opensafelyPath: string | undefined = config.get("opensafelyPath");
 		const imageVersion = config.get("EHRQLImageVersion");
 
 		// Check that the dummy tables path exists
@@ -98,27 +99,38 @@ export function activate(context: vscode.ExtensionContext) {
 		debugPanel!.webview.html = 'Loading...';
 
 		// Get the filename relative to the workspace folder
-        const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
+		const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
 
 		// Define the command
-		const command = `"${opensafelyPath}" exec ehrql:"${imageVersion}" debug "${fileName}" --dummy-tables "${dummyTablesDir}" --display-format html`;
+		const args = ['exec', `ehrql:${imageVersion}`, 'debug', fileName, '--dummy-tables', dummyTablesDir, '--display-format', 'html'];
+		let output: string[] = [];
 
-		// Execute the command at the workspace root so we have access to the file and"
-		// the dummy tables folder
-		exec(command, { cwd: workspaceFolder.uri.fsPath }, (error, stdout, stderr) => {
-			if (error) {
-				console.error(`Error executing Python script: ${command}`);
-				console.error(error);
-				debugPanel!.webview.html = stderr.trim();
-			} else {
+		// use spawn as it a) gives us control over stdout/err, and b) it doesnt use a shell which can be insecure
+		const child = spawn(
+			opensafelyPath,
+			args,
+			{ 
+				// Execute the command at the workspace root so we have access to the file and"
+				// the dummy tables folder
+				cwd: workspaceFolder.uri.fsPath,
+			},
+		)
 
-			const css_uri = debugPanel!.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
-			if (!stderr) {
-				stderr = "Nothing to show.";
+		child.stdout.on('data', (data) => { output.push(data.toString("utf8")); });
+		child.stderr.on('data', (data) => { output.push(data.toString("utf8")); });
+		  
+		child.on('close', (code) => {
+			if (code) {
+				console.error(`Error executing Python script: ${opensafelyPath} ${args.join(' ')}`);
+				console.error(`Exited with ${code}`);
+				console.log(output.join("\n"));
+			} else if (!output) {
+				output = ["Nothing to show"]
 			}
-			debugPanel!.webview.html = getWebviewContent(stderr, stdout, css_uri);
-		}
+			const css_uri = debugPanel!.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
+			debugPanel!.webview.html = getWebviewContent(output, css_uri);			
 		});
+
 	});
 
 	context.subscriptions.push(disposable);
@@ -126,8 +138,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
-function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri): string {
-	const stderr_output = stderr.trim().replace(/\n/g, "<br>");
+function getWebviewContent(output: string[], css_uri: vscode.Uri): string {
+	const START_MARKER = "<!-- start debug output -->"
+	const END_MARKER = "<!-- end debug output -->"
+
+	const text = output.map(chunk => {
+		const clean = chunk.replace(START_MARKER, "</pre>").replace(END_MARKER, "<pre>")
+		return `<pre>${clean}</pre>`
+	})
+	console.error(text.join("n"))
 	return `
 			<!DOCTYPE html>
 			<html>
@@ -136,10 +155,7 @@ function getWebviewContent(stderr: string, stdout: string, css_uri: vscode.Uri):
 				</head>
 				<body>
 				  <div>
-					  ${stderr_output}
-				  </div>
-				  <div class="dataset">
-					${stdout.trim()}
+					${text.join("\n")}
 				  </div>
 				</body>
 			 </html>
