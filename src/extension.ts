@@ -103,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Define the command
 		const args = ['exec', `ehrql:${imageVersion}`, 'debug', fileName, '--dummy-tables', dummyTablesDir, '--display-format', 'html'];
-		let output: string[] = [];
+		let output: string = "";
 
 		// use spawn as it a) gives us control over stdout/err, and b) it doesnt use a shell which can be insecure
 		const child = spawn(
@@ -116,16 +116,15 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 		)
 
-		child.stdout.on('data', (data) => { output.push(data.toString("utf8")); });
-		child.stderr.on('data', (data) => { output.push(data.toString("utf8")); });
-		  
+		child.stdout.on('data', (data) => { output += data.toString("utf8"); });
+		child.stderr.on('data', (data) => { output += data.toString("utf8"); });
 		child.on('close', (code) => {
 			if (code) {
 				console.error(`Error executing Python script: ${opensafelyPath} ${args.join(' ')}`);
 				console.error(`Exited with ${code}`);
-				console.log(output.join("\n"));
+				console.log(output);
 			} else if (!output) {
-				output = ["Nothing to show"]
+				output = "Nothing to show";
 			}
 			const css_uri = debugPanel!.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
 			debugPanel!.webview.html = getWebviewContent(output, css_uri);			
@@ -138,15 +137,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
-function getWebviewContent(output: string[], css_uri: vscode.Uri): string {
+function getWebviewContent(output: string, css_uri: vscode.Uri): string {
 	const START_MARKER = "<!-- start debug output -->"
 	const END_MARKER = "<!-- end debug output -->"
+	console.log(output);
 
-	const text = output.map(chunk => {
-		const clean = chunk.replace(START_MARKER, "</pre>").replace(END_MARKER, "<pre>")
-		return `<pre>${clean}</pre>`
-	})
-	console.error(text.join("n"))
+	const clean = output.replace(START_MARKER, "</pre>").replace(END_MARKER, "<pre>")
+	const text = `<pre>${clean}</pre>`
+	console.error(text)
 	return `
 			<!DOCTYPE html>
 			<html>
@@ -155,7 +153,7 @@ function getWebviewContent(output: string[], css_uri: vscode.Uri): string {
 				</head>
 				<body>
 				  <div>
-					${text.join("\n")}
+					${text}
 				  </div>
 				</body>
 			 </html>
