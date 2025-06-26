@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { spawn } from 'child_process';
+import { spawnSync } from 'child_process';
 import { Writable } from 'stream';
 
 let debugPanel: vscode.WebviewPanel | undefined;
@@ -35,13 +36,6 @@ export function activate(context: vscode.ExtensionContext) {
 		const dummyTablesDir = config.get("DummyTablesDir", "dummy_tables");
 		let opensafelyPath: string | undefined = config.get("opensafelyPath");
 		const imageVersion = config.get("EHRQLImageVersion");
-
-		// Check that the dummy tables path exists
-		const dummyTablesPath = path.join(workspaceFolder.uri.fsPath, dummyTablesDir);
-		if (!fs.existsSync(dummyTablesPath)) {
-			vscode.window.showErrorMessage(`Dummy table path ${dummyTablesDir}/ not found`);
-			return;
-		}
 
 		// If no path is configured, look for it in the workspace venv and fall back
 		// to system install
@@ -97,13 +91,45 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		
 		debugPanel!.webview.html = 'Loading...';
+		const css_uri = debugPanel!.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
+
+		// Check that the dummy tables path exists
+		// If it doesn't exist, dump the ehrQL example data to the expected dummy tables directory
+		// and print a warning message to the user in the output panel.
+		const dummyTablesPath = path.join(workspaceFolder.uri.fsPath, dummyTablesDir);
+		let output: string = "";
+		if (!fs.existsSync(dummyTablesPath)) {
+			vscode.window.showErrorMessage(`Dummy table path ${dummyTablesDir}/ not found, fetching example data from ehrQL`);
+			const args = ['exec', `ehrql:${imageVersion}`, 'dump-example-data', "-d",  dummyTablesDir];
+			// We use spawnSync here to block until the dumped dummy tables are available
+			const child = spawnSync(
+				opensafelyPath,
+				args,
+				{
+					// Execute the command at the workspace root so we create the the dummy tables folder
+					// in the expected place
+					cwd: workspaceFolder.uri.fsPath,
+				},
+			);
+			output += `Warning: Dummy tables not found at ${dummyTablesDir}/!\n\n`;
+			if (child.status !== 0) {
+				output += child.output.toString();
+				debugPanel!.webview.html = getWebviewContent(output, css_uri);
+				console.error(`Error dumping example data as dummy tables: exit code ${child.status}`);
+				console.log(output);
+				return;
+			} else {
+				output += `${dummyTablesDir}/ has been populated with a set of example tables (CSV files).\n\n`;
+				output += 'Please note that these example data may not contain all the tables or fields that your ehrQL code requires.\n';
+				output += '"Missing file" errors will report any missing tables that are expected by your ehrQL.\n\n';
+			}
+		}
 
 		// Get the filename relative to the workspace folder
 		const fileName = editor.document.fileName.replace(workspaceFolder.uri.fsPath + "/", "");
 
 		// Define the command
 		const args = ['exec', `ehrql:${imageVersion}`, 'debug', fileName, '--dummy-tables', dummyTablesDir, '--display-format', 'html'];
-		let output: string = "";
 
 		// use spawn as it a) gives us control over stdout/err, and b) it doesnt use a shell which can be insecure
 		const child = spawn(
@@ -126,7 +152,6 @@ export function activate(context: vscode.ExtensionContext) {
 			} else if (!output) {
 				output = "Nothing to show";
 			}
-			const css_uri = debugPanel!.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'media/style.css')));
 			debugPanel!.webview.html = getWebviewContent(output, css_uri);			
 		});
 
