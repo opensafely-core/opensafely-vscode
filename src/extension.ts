@@ -140,7 +140,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// the dummy tables folder
 				cwd: workspaceFolder.uri.fsPath,
 			},
-		)
+		);
 
 		child.stdout.on('data', (data) => { output += data.toString("utf8"); });
 		child.stderr.on('data', (data) => { output += data.toString("utf8"); });
@@ -163,13 +163,13 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function getWebviewContent(output: string, css_uri: vscode.Uri): string {
-	const START_MARKER = "<!-- start debug output -->"
-	const END_MARKER = "<!-- end debug output -->"
+	const START_MARKER = "<!-- start debug output -->";
+	const END_MARKER = "<!-- end debug output -->";
 	console.log(output);
 
-	const clean = output.replace(START_MARKER, "</pre>").replace(END_MARKER, "<pre>")
-	const text = `<pre>${clean}</pre>`
-	console.error(text)
+	const clean = output.replace(START_MARKER, "</pre>").replace(END_MARKER, "<pre>");
+	const text = `<pre>${clean}</pre>`;
+	console.error(text);
 	return `
 			<!DOCTYPE html>
 			<html>
