@@ -17,3 +17,8 @@ updates:
       development-dependencies:
         dependency-type: "development"
     open-pull-requests-limit: 20
+    ignore:
+      - dependency-name: "@types/node"
+      # Our minimum support VS Code version includes Node.js 20.18.0,
+      # so stay on the same major version of types/node.
+        update-types: ["version-update:semver-major"]
