@@ -22,3 +22,10 @@ updates:
       # Our minimum support VS Code version includes Node.js 20.18.0,
       # so stay on the same major version of types/node.
         update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
