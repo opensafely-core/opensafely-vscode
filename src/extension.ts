@@ -142,9 +142,9 @@ export function activate(context: vscode.ExtensionContext) {
 			},
 		);
 
-		child.stdout.on('data', (data) => { output += data.toString("utf8"); });
-		child.stderr.on('data', (data) => { output += data.toString("utf8"); });
-		child.on('close', (code) => {
+		child.stdout.on('data', (data: Buffer) => { output += data.toString("utf8"); });
+		child.stderr.on('data', (data: Buffer) => { output += data.toString("utf8"); });
+		child.on('close', (code: number | null) => {
 			if (code) {
 				console.error(`Error executing Python script: ${opensafelyPath} ${args.join(' ')}`);
 				console.error(`Exited with ${code}`);
