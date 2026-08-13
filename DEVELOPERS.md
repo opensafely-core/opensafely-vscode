@@ -30,7 +30,7 @@ virtual env in the study repo called `venv` or `.venv`, or specified in `.vscode
 2. Hover over your username once logged in and copy your user id
 3. Ask the vscode admins (currently Becky, maybe Bennett admins in future) to:
  - add you to the `bennettoxford` Azure Devops organization
-    - https://dev.azure.com/bennettoxford/settings/users
+    - https://dev.azure.com/bennettoxford/_settings/users
     - Add as Basic user
     - It is unclear if this is a hard requirement. It may be you need to be in
       an organization to generate a PAT. But it is what the docs say to do,
