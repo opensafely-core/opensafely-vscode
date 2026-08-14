@@ -53,7 +53,6 @@ You should now have permission to publish the vscode package.
 
 https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token
 
-https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token
 If in doubt, select `bennettoxford` for the `Organization` field when creating the PAT. 
 
 Sadly, this has an expiry, so you may need to repeat this.
