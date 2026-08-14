@@ -23,27 +23,38 @@ virtual env in the study repo called `venv` or `.venv`, or specified in `.vscode
 
 ## Publishing
 
-
 ### Setting up a user account to be able to publish
 
-1. Sign in to https://azure.microsoft.com/en-gb/products/devops/. Do *not* use phcr account, but instead sign in with Github, and choose your datalab email.
-2. Hover over your username once logged in and copy your user id
-3. Ask the vscode admins (currently Becky, maybe Bennett admins in future) to:
- - add you to the `bennettoxford` Azure Devops organization
-    - https://dev.azure.com/bennettoxford/_settings/users
-    - Add as Basic user
-    - It is unclear if this is a hard requirement. It may be you need to be in
-      an organization to generate a PAT. But it is what the docs say to do,
-      so...
- - add you to the `bennettoxford` publisher:
+1. Ask the Azure DevOps Organisation Admins (currently Becky, maybe Bennett admins in future) to [add you to the `bennettoxford` organisation](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/add-organization-users), with admin permissions on the project. 
+
+   - https://dev.azure.com/bennettoxford/_settings/users
+   - Click "Add users":
+      - Enter the new user's email address* in the user field
+      - Select Access Level - Basic
+      - Add to projects - select "OpenSAFELY vscode extension"
+      - Add to AzureDevOps Groups - select "ProjectAdministrator"
+      - Check the "Send email invites" box
+
+   * Note: Preferably use your datalab email address. You _can_ use your Oxford email address for this, to avoid having yet another Microsoft account, however, you'll need to be added to the organistation with the prhcxxxx@ox.ac.uk email that you use to log in, not your human-readable alias.
+
+1. From the email invitation, click on the link to the organisation, and login (ensure you're using the account that matches the email address the invitation was sent to). Once you're logged in, find your user ID:
+   - Go to https://marketplace.visualstudio.com
+   - hover over your user name; this will allow you to copy your user ID.
+
+   Note that you need to do this from the VS Marketplace, and **NOT** from the Azure DevOps organisation page.
+
+1. Ask an Organisation Admin to add you to the bennettoxford publisher - this can **only** be done by user ID:
     - https://marketplace.visualstudio.com/manage/publishers/bennettoxford
     - Add user to Publisher using provided user id
 
-The user should now have permissions to publish the vscode package.
+You should now have permission to publish the vscode package.
 
 ### Generate a PAT
 
 https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token
+
+https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token
+If in doubt, select `bennettoxford` for the `Organization` field when creating the PAT. 
 
 Sadly, this has an expiry, so you may need to repeat this.
 
