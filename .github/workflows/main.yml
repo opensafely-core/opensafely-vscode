@@ -23,6 +23,7 @@ jobs:
         with:
           cache: "npm"
           cache-dependency-path: package-lock.json
+          node-version-file: .node-version
 
       - name: Check we can build the package
         run: just build
