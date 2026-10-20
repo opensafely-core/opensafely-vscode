@@ -7,7 +7,7 @@
   "version": "1.3.3",
   "engines": {
     "vscode": "^1.95.0",
-    "node": ">=20.18.0"
+    "node": ">=22"
   },
   "categories": [
     "Programming Languages",
