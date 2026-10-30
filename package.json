@@ -85,6 +85,7 @@
     "typescript": "^6.0.3"
   },
     "overrides": {
-    "serialize-javascript": "^7.1.2"
+    "serialize-javascript": "^7.1.2",
+    "@azure/msal-node": ">=7.1.0"
   }
 }
