@@ -13,17 +13,20 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: "opensafely-core/setup-action@v1"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: opensafely-core/setup-action@1f93a08c6e31a75b0908fcac5d25c2cf729c31f2 # v1.8.0
         with:
           install-just: true
       
       - name: Install Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-          node-version-file: .node-version
+          node-version-file: ".node-version"
+          check-latest: true
+          package-manager-cache: false
 
       - name: Check we can build the package
         run: just build
