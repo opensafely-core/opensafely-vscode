@@ -8,8 +8,13 @@ import * as vscode from 'vscode';
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
+	test('activates and registers the ehrQL debug command', async () => {
+		const extension = vscode.extensions.getExtension('bennettoxford.opensafely');
+		assert.ok(extension, 'Expected the OpenSAFELY extension to be available');
+
+		await extension.activate();
+
+		const commands = await vscode.commands.getCommands(true);
+		assert.ok(commands.includes('ehrql.debug'));
 	});
 });
