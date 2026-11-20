@@ -16,6 +16,9 @@ build: devenv
 install: build
     code --install-extension opensafely-*.vsix
 
+test: devenv
+    npm run test  
+
 # Login as publisher with PAT
 login:
     @echo "You will need a PAT for this, see DEVELOPERS.md"
